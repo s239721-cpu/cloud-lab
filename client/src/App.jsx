@@ -5,9 +5,12 @@ function App() {
   const [formData, setFormData] = useState({ studentId: '', name: '', email: '' });
   const [editingId, setEditingId] = useState(null);
 
+  // Định nghĩa URL Backend chuẩn (Port 5000, không có dấu / ở cuối)
+  const API_BASE = 'https://orange-telegram-6v4gg6xrwp5j24vxv-5000.app.github.dev/api/students';
+
   const fetchStudents = async () => {
     try {
-      const res = await fetch('/api/students');
+      const res = await fetch(API_BASE);
       const data = await res.json();
       setStudents(data);
     } catch (err) {
@@ -21,7 +24,8 @@ function App() {
     e.preventDefault();
     try {
       if (editingId) {
-        const res = await fetch(`/api/students/${editingId}`, {
+        // Cập nhật sinh viên (PUT)
+        const res = await fetch(`${API_BASE}/${editingId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData)
@@ -35,7 +39,8 @@ function App() {
           alert('Lỗi cập nhật sinh viên!');
         }
       } else {
-        const res = await fetch('/api/students', {
+        // Thêm sinh viên (POST)
+        const res = await fetch(API_BASE, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData)
@@ -62,7 +67,8 @@ function App() {
   const handleDelete = async (id) => {
     if (window.confirm('Xác nhận xóa sinh viên này?')) {
       try {
-        const res = await fetch(`/api/students/${id}`, { method: 'DELETE' });
+        // Xóa sinh viên (DELETE)
+        const res = await fetch(`${API_BASE}/${id}`, { method: 'DELETE' });
         if (res.ok) {
           alert('Xóa sinh viên thành công!');
           fetchStudents();
